@@ -20,6 +20,10 @@ sustained_h = False
 
 while running:
     surface.fill((0, 0, 0))
+    pygame.draw.line(surface, colour, (300,200), (300,600))
+    pygame.draw.line(surface, colour, (500,200), (500,600))
+    pygame.draw.line(surface, colour, (200,300), (600,300))
+    pygame.draw.line(surface, colour, (200,500), (600,500))
     pygame.draw.rect(surface, colour, pygame.Rect(top, left, 100, 100))
     pygame.display.flip()
     if sustained_h:
