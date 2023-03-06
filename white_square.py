@@ -18,12 +18,17 @@ sustained_right = False
 sustained_left = False
 sustained_h = False
 
+size_of_boxes = int(input('Enter a box size (50-175):'))
+position = (100,200)
+x = position[0]
+y = position[1]
+
 while running:
     surface.fill((0, 0, 0))
-    pygame.draw.line(surface, colour, (300,200), (300,600))
-    pygame.draw.line(surface, colour, (500,200), (500,600))
-    pygame.draw.line(surface, colour, (200,300), (600,300))
-    pygame.draw.line(surface, colour, (200,500), (600,500))
+    pygame.draw.line(surface, colour, (x, y+size_of_boxes), (x+size_of_boxes*3, y+size_of_boxes), width= 5)
+    pygame.draw.line(surface, colour, (x+size_of_boxes, y), (x+size_of_boxes, y+size_of_boxes*3), width= 5)
+    pygame.draw.line(surface, colour, (x, y+size_of_boxes*2), (x+size_of_boxes*3, y+size_of_boxes*2), width= 5)
+    pygame.draw.line(surface, colour, (x+size_of_boxes*2, y), (x+size_of_boxes*2, y+size_of_boxes*3), width= 5)
     pygame.draw.rect(surface, colour, pygame.Rect(top, left, 100, 100))
     pygame.display.flip()
     if sustained_h:
