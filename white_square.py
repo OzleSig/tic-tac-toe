@@ -18,8 +18,8 @@ sustained_right = False
 sustained_left = False
 sustained_h = False
 
-size_of_boxes = int(input('Enter a box size (50-175):'))
-position = (100,200)
+size_of_boxes = 200
+position = (100,100)
 x = position[0]
 y = position[1]
 
