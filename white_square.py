@@ -37,6 +37,8 @@ def check_mouse_on_grid(mouse_pos):
             y = 2
     return x,y
 
+def draw_hover()
+
 
 def game_draw():
     global running
