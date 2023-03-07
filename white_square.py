@@ -14,7 +14,6 @@ position = (100,100)
 x = position[0]
 y = position[1]
 
-
 while running:
     surface.fill((0, 0, 0))
     pygame.draw.line(surface, colour, (x, y+size_of_boxes), (x+size_of_boxes*3, y+size_of_boxes), width= 5)
