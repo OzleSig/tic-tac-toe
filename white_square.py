@@ -3,7 +3,8 @@ from pygame.locals import *
 pygame.init()
 
 surface = pygame.display.set_mode((800,800))
-colour = (169, 169, 169)
+hover_grey = (105, 105, 105)
+white = (255, 255, 255)
 running = True
 size_of_boxes = 200
 position_of_box = (100,100)
@@ -65,16 +66,16 @@ def draw_hover(mouse_pos):
             hover_pos = (x2, y1)
         elif mouse_pos == (2, 2):
             hover_pos = (x2, y2)
-        pygame.draw.rect(surface, colour, pygame.Rect(hover_pos[0]+pos_multiplier, hover_pos[1]+pos_multiplier, hover_size, hover_size))
+        pygame.draw.rect(surface, hover_grey, pygame.Rect(hover_pos[0]+pos_multiplier, hover_pos[1]+pos_multiplier, hover_size, hover_size))
 
 def game_draw():
     global running
     while running:
         surface.fill((0, 0, 0))
-        pygame.draw.line(surface, colour, (x0, y1), (x3, y1), width= 5)
-        pygame.draw.line(surface, colour, (x1, y0), (x1, y3), width= 5)
-        pygame.draw.line(surface, colour, (x0, y2), (x3, y2), width= 5)
-        pygame.draw.line(surface, colour, (x2, y0), (x2, y3), width= 5)
+        pygame.draw.line(surface, white, (x0, y1), (x3, y1), width= 5)
+        pygame.draw.line(surface, white, (x1, y0), (x1, y3), width= 5)
+        pygame.draw.line(surface, white, (x0, y2), (x3, y2), width= 5)
+        pygame.draw.line(surface, white, (x2, y0), (x2, y3), width= 5)
         mouse_pos = pygame.mouse.get_pos()
         draw_hover(check_mouse_on_grid(mouse_pos))
         pygame.display.flip()
