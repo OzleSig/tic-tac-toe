@@ -2,12 +2,19 @@ import pygame
 from pygame.locals import *
 pygame.init()
 
-surface = pygame.display.set_mode((800,800))
+window_size = 800
+surface = pygame.display.set_mode((window_size,window_size))
+
+margin_size = window_size*0.2
+size_of_boxes = (window_size-margin_size*2)/3
+position_of_box = (margin_size, margin_size)
+
+running = True
+
 hover_grey = (105, 105, 105)
 white = (255, 255, 255)
-running = True
-size_of_boxes = 200
-position_of_box = (100,100)
+black = (0, 0, 0)
+
 x0 = position_of_box[0]
 y0 = position_of_box[1]
 x1 = x0+size_of_boxes
@@ -16,6 +23,18 @@ x2 = x0+size_of_boxes*2
 y2 = y0+size_of_boxes*2
 x3 = x0+size_of_boxes*3
 y3 = y0+size_of_boxes*3
+
+def game_text():
+    font_size_header = 50
+    font_size_player = round(font_size_header*.5)
+    font_header = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_header)
+    font_players = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_player)
+    text_header = font_header.render('TIC TAC TOE', True, white)
+    player_1 = font_players.render('Player 1', True, white)
+    player_2 = font_players.render('Player 2', True, white)
+    surface.blit(text_header, (250, 20))
+    surface.blit(player_1, (window_size*0.05, 30))
+    surface.blit(player_2, (window_size-window_size*0.2, 30))
 
 def check_mouse_on_grid(mouse_pos):
     mouse_x = mouse_pos[0]
@@ -71,7 +90,8 @@ def draw_hover(mouse_pos):
 def game_draw():
     global running
     while running:
-        surface.fill((0, 0, 0))
+        surface.fill(black)
+        game_text()
         pygame.draw.line(surface, white, (x0, y1), (x3, y1), width= 5)
         pygame.draw.line(surface, white, (x1, y0), (x1, y3), width= 5)
         pygame.draw.line(surface, white, (x0, y2), (x3, y2), width= 5)
