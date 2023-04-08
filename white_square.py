@@ -124,7 +124,12 @@ def check_mouse_on_grid(mouse_pos):
         x = -1
     return x,y
 
-#def check_grid_click(mouse_pos):
+def play_again():
+    play_again_font = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", 40)
+    play_again_render = play_again_font.render('Play again?', True, white)
+    play_answer_render = play_again_font.render('Y / N', True, white)
+    surface.blit(play_again_render, (280, (window_size-150)))
+    surface.blit(play_answer_render, (340, (window_size-100)))
     
 
 def grid_to_list(mouse_pos):
@@ -173,6 +178,8 @@ def game_loop():
         mouse_pos = pygame.mouse.get_pos()
         hover_draw(grid_to_list(check_mouse_on_grid(mouse_pos)))
         x_o_draw(game_state)
+        if check_for_winner():
+            play_again()   
         pygame.display.flip()
         for event in pygame.event.get():
             if not check_for_winner():
@@ -181,5 +188,5 @@ def game_loop():
                     print(game_state)
                     player+=1
             if event.type == QUIT:
-                running = False
+                running = False  
 game_loop()
