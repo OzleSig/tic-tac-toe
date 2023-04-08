@@ -3,12 +3,12 @@ import copy
 from pygame.locals import *
 pygame.init()
 
-game_state =    [['_','_','_'], 
-                ['_','_','_'],
+game_state =    [[' ',' ',' '], 
+                [' ',' ',' '],
                 [' ',' ',' ']]
 
-game_state_empty =      [['_','_','_'], 
-                        ['_','_','_'],
+game_state_empty =      [[' ',' ',' '], 
+                        [' ',' ',' '],
                         [' ',' ',' ']]
 
 window_size = 800
@@ -40,25 +40,27 @@ def update_grid(pos,player_char):
     y = pos[0]
     x = pos[1]
     current = game_state[y][x]
-    if (current=='_') or (current==' '):
+    if (current==' '):
         game_state[y][x]=player_char
         return True
     return False
 
 def check_horizontals():
     for x in range(3):
-        if not ((game_state[x][0]=='_') or (game_state[x][0]==' ')):
+        if not ((game_state[x][0]==' ')):
             if game_state[x][0]==game_state[x][1]==game_state[x][2]:
                 return True
 
 def check_verticles():
     for x in range(3):
-        if game_state[0][x]==game_state[1][x]==game_state[2][x]:
-            return True
+        if not ((game_state[0][x]==' ')):
+            if game_state[0][x]==game_state[1][x]==game_state[2][x]:
+                return True
 
 def check_diagonal():
-    if (game_state[0][0]==game_state[1][1]==game_state[2][2]) or game_state[2][0]==game_state[1][1]==game_state[0][2]:
-        return True
+    if not game_state[1][1]== ' ':
+        if (game_state[0][0]==game_state[1][1]==game_state[2][2]) or (game_state[2][0]==game_state[1][1]==game_state[0][2]):
+            return True
 
 def check_for_winner():
     if check_diagonal() or check_horizontals() or check_verticles():
@@ -84,8 +86,17 @@ def game_text(player_1_score_int, player_2_score_int):
     surface.blit(text_header, (250, 20))
     surface.blit(player_1, (window_size*0.05, 30))
     surface.blit(player_1_score, (window_size*0.05, 70))
-    surface.blit(player_2, (window_size-window_size*0.2, 30))
-    surface.blit(player_2_score, (window_size-window_size*0.2, 70))
+    surface.blit(player_2, (window_size-margin_size, 30))
+    surface.blit(player_2_score, (window_size-margin_size, 70))
+
+def x_o_draw(game_state):
+    font_size_xo = 100
+    font_xo =  pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_xo)
+    for y_index, row in enumerate(game_state):
+        for x_index, item in enumerate(row):
+            if not item == '_':
+                xo = font_xo.render(item, True, white)
+                surface.blit(xo, grid_to_list((y_index, x_index)))
 
 def check_mouse_on_grid(mouse_pos):
     mouse_x = mouse_pos[0]
@@ -152,21 +163,23 @@ def game_draw():
     pygame.draw.line(surface, white, (x0, y2), (x3, y2), width= 5)
     pygame.draw.line(surface, white, (x2, y0), (x2, y3), width= 5)
 
+
 def game_loop():
     global running
     player = 0 
-    play_again = 'y'
     while running:
         game_draw()
         game_text(player_1_score_int, player_2_score_int)
         mouse_pos = pygame.mouse.get_pos()
         hover_draw(grid_to_list(check_mouse_on_grid(mouse_pos)))
+        x_o_draw(game_state)
         pygame.display.flip()
         for event in pygame.event.get():
             if not check_for_winner():
                 if event.type == MOUSEBUTTONDOWN:
-                    update_grid(check_mouse_on_grid(mouse_pos), 'x')
+                    update_grid(check_mouse_on_grid(mouse_pos), x_or_o(player))  
                     print(game_state)
+                    player+=1
             if event.type == QUIT:
                 running = False
 game_loop()
