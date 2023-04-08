@@ -23,6 +23,7 @@ running = True
 hover_grey = (105, 105, 105)
 white = (255, 255, 255)
 black = (0, 0, 0)
+red = (255, 0, 0)
 
 player_1_score_int = 0
 player_2_score_int = 0
@@ -124,13 +125,36 @@ def check_mouse_on_grid(mouse_pos):
         x = -1
     return x,y
 
-def play_again():
+def check_mouse_YN(mouse_pos):
+    play_again = True
+    mouse_x = mouse_pos[0]
+    mouse_y = mouse_pos[1]
+    if mouse_y > 700 and mouse_y<770:
+        if mouse_x>340 and mouse_x<370:
+            return play_again
+        elif mouse_x>420 and mouse_x<450:
+            return not play_again
+            
+
+def play_again(hover):
+    if hover == True:
+        colourY = red
+        colourN = white
+    elif hover == False:
+        colourN = red
+        colourY = white
+    else: 
+        colourY = white
+        colourN = white
     play_again_font = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", 40)
     play_again_render = play_again_font.render('Play again?', True, white)
-    play_answer_render = play_again_font.render('Y / N', True, white)
+    play_answer_Y = play_again_font.render('Y', True, colourY)
+    play_answer = play_again_font.render('/', True, white)
+    play_answer_N = play_again_font.render('N', True, colourN)
     surface.blit(play_again_render, (280, (window_size-150)))
-    surface.blit(play_answer_render, (340, (window_size-100)))
-    
+    surface.blit(play_answer_Y, (340, (window_size-100)))
+    surface.blit(play_answer, (380, (window_size-100)))
+    surface.blit(play_answer_N, (420, (window_size-100)))
 
 def grid_to_list(mouse_pos):
     grid_pos = (x0, y0)
@@ -179,9 +203,12 @@ def game_loop():
         hover_draw(grid_to_list(check_mouse_on_grid(mouse_pos)))
         x_o_draw(game_state)
         if check_for_winner():
-            play_again()   
+            play_again(check_mouse_YN(mouse_pos))
         pygame.display.flip()
         for event in pygame.event.get():
+            if check_for_winner():
+                if event.type == MOUSEBUTTONDOWN:
+                    print(check_mouse_YN(mouse_pos)) 
             if not check_for_winner():
                 if event.type == MOUSEBUTTONDOWN:
                     update_grid(check_mouse_on_grid(mouse_pos), x_or_o(player))  
