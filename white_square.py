@@ -37,10 +37,14 @@ y2 = y0+size_of_boxes*2
 x3 = x0+size_of_boxes*3
 y3 = y0+size_of_boxes*3
 
+pos_multiplier = size_of_boxes*0.1
+
 def update_grid(pos,player_char):
     y = pos[0]
     x = pos[1]
     current = game_state[y][x]
+    if y == -1 and x == -1:
+        return False
     if (current==' '):
         game_state[y][x]=player_char
         return True
@@ -97,7 +101,11 @@ def x_o_draw(game_state):
         for x_index, item in enumerate(row):
             if not item == '_':
                 xo = font_xo.render(item, True, white)
-                surface.blit(xo, grid_to_list((y_index, x_index)))
+                xy = list(grid_to_list((y_index, x_index)))
+                xy[0] += size_of_boxes*0.3
+                xy[1] += size_of_boxes*0.1
+                surface.blit(xo, xy)
+                
 
 def check_mouse_on_grid(mouse_pos):
     mouse_x = mouse_pos[0]
@@ -195,6 +203,7 @@ def game_draw():
 
 def game_loop():
     global running
+    global game_state
     player = 0 
     while running:
         game_draw()
@@ -206,9 +215,11 @@ def game_loop():
             play_again(check_mouse_YN(mouse_pos))
         pygame.display.flip()
         for event in pygame.event.get():
-            if check_for_winner():
-                if event.type == MOUSEBUTTONDOWN:
-                    print(check_mouse_YN(mouse_pos)) 
+            if check_for_winner() and event.type == MOUSEBUTTONDOWN:
+                if check_mouse_YN(mouse_pos):
+                        game_state = copy.deepcopy(game_state_empty)
+                elif not check_mouse_YN(mouse_pos):
+                        running = False
             if not check_for_winner():
                 if event.type == MOUSEBUTTONDOWN:
                     update_grid(check_mouse_on_grid(mouse_pos), x_or_o(player))  
