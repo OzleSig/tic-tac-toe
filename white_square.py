@@ -11,7 +11,7 @@ game_state_empty =      [[' ',' ',' '],
                         [' ',' ',' '],
                         [' ',' ',' ']]
 
-window_size = 800
+window_size = 900
 surface = pygame.display.set_mode((window_size,window_size))
 
 margin_size = window_size*0.2
@@ -25,8 +25,8 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
 
-player_1_score_int = 0
-player_2_score_int = 0
+player_O_score_int = 0
+player_X_score_int = 0
 
 x0 = position_of_box[0]
 y0 = position_of_box[1]
@@ -78,32 +78,41 @@ def x_or_o(player):
         player_char = 'X'
     return player_char
 
-def game_text(player_1_score_int, player_2_score_int):
-    font_size_header = 50
+def score_change(x_or_o):
+    global player_O_score_int
+    global player_X_score_int
+    if x_or_o == 'O':
+        player_O_score_int+=1
+    else:
+        player_X_score_int+=1
+
+
+def game_text(player_O_score_int, player_X_score_int):
+    font_size_header = round(window_size*0.06)
     font_size_player = round(font_size_header*.5)
     font_header = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_header)
     font_players = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_player)
     text_header = font_header.render('TIC TAC TOE', True, white)
-    player_1 = font_players.render('Player 1', True, white)
-    player_1_score = font_players.render(str(player_1_score_int), True, white)
-    player_2 = font_players.render('Player 2', True, white)
-    player_2_score = font_players.render(str(player_2_score_int), True, white)
-    surface.blit(text_header, (250, 20))
-    surface.blit(player_1, (window_size*0.05, 30))
-    surface.blit(player_1_score, (window_size*0.05, 70))
-    surface.blit(player_2, (window_size-margin_size, 30))
-    surface.blit(player_2_score, (window_size-margin_size, 70))
+    player_O = font_players.render('Player O', True, white)
+    player_O_score = font_players.render(str(player_O_score_int), True, white)
+    player_X = font_players.render('Player X', True, white)
+    player_X_score = font_players.render(str(player_X_score_int), True, white)
+    surface.blit(text_header, (window_size*0.3, window_size*0.03))
+    surface.blit(player_O, (window_size*0.05, window_size*0.0375))
+    surface.blit(player_O_score, (window_size*0.05, window_size*0.0875))
+    surface.blit(player_X, (window_size- window_size*0.17, window_size*0.0375))
+    surface.blit(player_X_score, (window_size-window_size*0.17, window_size*0.0875))
 
 def x_o_draw(game_state):
-    font_size_xo = 100
+    font_size_xo = round(window_size*0.16)
     font_xo =  pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_xo)
     for y_index, row in enumerate(game_state):
         for x_index, item in enumerate(row):
             if not item == '_':
                 xo = font_xo.render(item, True, white)
                 xy = list(grid_to_list((y_index, x_index)))
-                xy[0] += size_of_boxes*0.3
-                xy[1] += size_of_boxes*0.1
+                xy[0] += size_of_boxes*0.27
+                xy[1] += size_of_boxes*0.02
                 surface.blit(xo, xy)
                 
 
@@ -137,10 +146,10 @@ def check_mouse_YN(mouse_pos):
     play_again = True
     mouse_x = mouse_pos[0]
     mouse_y = mouse_pos[1]
-    if mouse_y > 700 and mouse_y<770:
-        if mouse_x>340 and mouse_x<370:
+    if mouse_y > window_size*0.875 and mouse_y<window_size*0.9625:
+        if mouse_x>window_size*0.425 and mouse_x<window_size*0.4625:
             return play_again
-        elif mouse_x>420 and mouse_x<450:
+        elif mouse_x>window_size*0.525 and mouse_x<window_size*0.5625:
             return not play_again
             
 
@@ -154,15 +163,15 @@ def play_again(hover):
     else: 
         colourY = white
         colourN = white
-    play_again_font = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", 40)
+    play_again_font = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", round(window_size*0.05))
     play_again_render = play_again_font.render('Play again?', True, white)
     play_answer_Y = play_again_font.render('Y', True, colourY)
     play_answer = play_again_font.render('/', True, white)
     play_answer_N = play_again_font.render('N', True, colourN)
-    surface.blit(play_again_render, (280, (window_size-150)))
-    surface.blit(play_answer_Y, (340, (window_size-100)))
-    surface.blit(play_answer, (380, (window_size-100)))
-    surface.blit(play_answer_N, (420, (window_size-100)))
+    surface.blit(play_again_render, (window_size*0.35, (window_size-window_size*0.1875)))
+    surface.blit(play_answer_Y, (window_size*0.425, (window_size-window_size*0.125)))
+    surface.blit(play_answer, (window_size*0.475, (window_size-window_size*0.125)))
+    surface.blit(play_answer_N, (window_size*0.525, (window_size-window_size*0.125)))
 
 def grid_to_list(mouse_pos):
     grid_pos = (x0, y0)
@@ -200,31 +209,39 @@ def game_draw():
     pygame.draw.line(surface, white, (x0, y2), (x3, y2), width= 5)
     pygame.draw.line(surface, white, (x2, y0), (x2, y3), width= 5)
 
+def winning_text(who_won):
+    winner_font = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", round(window_size*0.05))
+    winner = winner_font.render('Player ' + who_won + ' wins!', True, red)
+    pygame.draw.rect(surface, black, pygame.Rect(round(window_size*.1), round(window_size*.43), round(window_size*.8), round(window_size*.15)))
+    surface.blit(winner, (round(window_size*.32), round(window_size*.47)))
 
 def game_loop():
     global running
     global game_state
+    global player_X_score_int
+    global player_O_score_int
     player = 0 
     while running:
         game_draw()
-        game_text(player_1_score_int, player_2_score_int)
+        game_text(player_O_score_int, player_X_score_int)
         mouse_pos = pygame.mouse.get_pos()
         hover_draw(grid_to_list(check_mouse_on_grid(mouse_pos)))
         x_o_draw(game_state)
         if check_for_winner():
+            winner = player+1
+            winning_text(x_or_o(winner))
             play_again(check_mouse_YN(mouse_pos))
         pygame.display.flip()
         for event in pygame.event.get():
             if check_for_winner() and event.type == MOUSEBUTTONDOWN:
                 if check_mouse_YN(mouse_pos):
                         game_state = copy.deepcopy(game_state_empty)
-                elif not check_mouse_YN(mouse_pos):
+                        score_change(x_or_o(winner))
+                elif check_mouse_YN(mouse_pos) == False:
+                        check_mouse_YN(mouse_pos)
                         running = False
-            if not check_for_winner():
-                if event.type == MOUSEBUTTONDOWN:
-                    update_grid(check_mouse_on_grid(mouse_pos), x_or_o(player))  
-                    print(game_state)
-                    player+=1
+            if not check_for_winner() and event.type == MOUSEBUTTONDOWN and update_grid(check_mouse_on_grid(mouse_pos), x_or_o(player)):
+                player+=1
             if event.type == QUIT:
                 running = False  
 game_loop()
