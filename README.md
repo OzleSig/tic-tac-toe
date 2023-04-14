@@ -8,7 +8,7 @@ This is my repo for a pygame enhanced tic tac toe game. I have already made a ti
 * Drawn X or O on grid using 2d list in code
 * Added changing score over matches
 * Game resets on a draw
+* Winning row/colomn/diagonal indicated in red
 
 ## Planned changes
-* Player indicator
-* Change colour on win state
+* Refactor the code

@@ -45,25 +45,27 @@ def update_grid(pos, player_char):
         return True
     return False
 
-def check_horizontals():
+def check_verticle():
     for x in range(3):
         if not ((game_state[x][0]==' ')):
             if game_state[x][0]==game_state[x][1]==game_state[x][2]:
-                return True
+                return True, x
 
-def check_verticles():
+def check_horizontal():
     for x in range(3):
         if not ((game_state[0][x]==' ')):
             if game_state[0][x]==game_state[1][x]==game_state[2][x]:
-                return True
+                return True, x
 
 def check_diagonal():
     if not game_state[1][1]== ' ':
-        if (game_state[0][0]==game_state[1][1]==game_state[2][2]) or (game_state[2][0]==game_state[1][1]==game_state[0][2]):
-            return True
+        if game_state[0][0]==game_state[1][1]==game_state[2][2]: 
+            return True, -1
+        elif game_state[2][0]==game_state[1][1]==game_state[0][2]: 
+            return True, 1
 
 def check_for_winner():
-    return check_diagonal() or check_horizontals() or check_verticles()
+    return check_diagonal() or check_horizontal() or check_verticle()
     
 def x_or_o(player):
     if player == 'O':
@@ -100,7 +102,8 @@ def check_mouse_on_grid(mouse_pos):
         elif mouse_y < y3:
             y = 2
     if x == -1 or y == -1:
-        y = -1        x = -1
+        y = -1        
+        x = -1
     return x,y
 
 def check_mouse_YN(mouse_pos):
@@ -180,10 +183,31 @@ def game_text(player_O_score_int, player_X_score_int):
     surface.blit(player_X_score, (window_size-window_size*0.17, window_size*0.0875))
 
 def x_o_draw(game_state):
+    colour = white
     for y_index, row in enumerate(game_state):
+        if check_verticle() and check_for_winner()[1] == y_index:
+            colour = red    
+        else:
+            colour = white
         for x_index, item in enumerate(row):
+            if not check_verticle() and check_diagonal():
+                    if check_diagonal()[1] == -1 and x_index == y_index:
+                        colour = red
+                    elif check_diagonal()[1] == 1:
+                        indexes = (x_index, y_index)
+                        if indexes == (1,1) or indexes == (0,2) or indexes == (2,0):
+                            colour = red
+                        else:
+                            colour = white
+                    else: 
+                        colour = white
+            elif check_horizontal():
+                if check_for_winner()[1] == x_index:
+                    colour = red
+                else: 
+                    colour = white
             if not item == '_':
-                xo = font_xo.render(item, True, white)
+                xo = font_xo.render(item, True, colour)
                 xy = list(grid_to_list((y_index, x_index)))
                 xy[0] += size_of_boxes*0.27
                 xy[1] += size_of_boxes*0.02
@@ -191,11 +215,12 @@ def x_o_draw(game_state):
 
 def x_o_hover(mouse_pos, x_or_o):
     xo = font_xo.render(x_or_o, True, hover_grey)
-    if not mouse_pos is None:
-        mouse_pos = list(mouse_pos)
-        mouse_pos[0] += size_of_boxes*0.27
-        mouse_pos[1] += size_of_boxes*0.02
-        surface.blit(xo, mouse_pos)  
+    if not check_for_winner():
+        if not mouse_pos is None:
+            mouse_pos = list(mouse_pos)
+            mouse_pos[0] += size_of_boxes*0.27
+            mouse_pos[1] += size_of_boxes*0.02
+            surface.blit(xo, mouse_pos)  
 
 def game_loop():
     global running
@@ -215,12 +240,13 @@ def game_loop():
             play_again(check_mouse_YN(mouse_pos))
         pygame.display.flip()
         for event in pygame.event.get():
-            if turn == 9:
+            if not check_for_winner() and turn == 9:
                 game_state = copy.deepcopy(game_state_empty)
             if check_for_winner() and event.type == MOUSEBUTTONDOWN:
+                turn = 0
                 if check_mouse_YN(mouse_pos):
                     game_state = copy.deepcopy(game_state_empty)
-                    score_change(player)
+                    score_change(winner)
                 elif check_mouse_YN(mouse_pos) == False:
                         check_mouse_YN(mouse_pos)
                         running = False
