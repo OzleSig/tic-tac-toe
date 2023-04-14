@@ -4,11 +4,11 @@ This is my repo for a pygame enhanced tic tac toe game. I have already made a ti
 ## Progress so far
 * Drawn grid with variables for sizing and positioning
 * Grid position of the mouse (collision detection)
-* Changed hover boxes on user input on grid to grey X or O 
+* Hover indicated on user input on grid to grey X or O 
 * Drawn X or O on grid using 2d list in code
 * Added changing score over matches
 * Game resets on a draw
-* Winning row/colomn/diagonal indicated in red
+* Winning row/column/diagonal indicated in red
 
 ## Planned changes
 * Refactor the code
