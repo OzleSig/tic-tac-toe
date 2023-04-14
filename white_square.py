@@ -6,7 +6,6 @@ pygame.init()
 game_state =    [[' ',' ',' '], 
                 [' ',' ',' '],
                 [' ',' ',' ']]
-
 game_state_empty =      [[' ',' ',' '], 
                         [' ',' ',' '],
                         [' ',' ',' ']]
@@ -28,6 +27,8 @@ x2 = x0+size_of_boxes*2
 y2 = y0+size_of_boxes*2
 x3 = x0+size_of_boxes*3
 y3 = y0+size_of_boxes*3
+font_size_xo = round(window_size*0.16)
+font_xo =  pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_xo)
 
 player_O_score_int = 0
 player_X_score_int = 0
@@ -98,11 +99,8 @@ def check_mouse_on_grid(mouse_pos):
             y = 1
         elif mouse_y < y3:
             y = 2
-#mouse is never (-1, y) or (x, -1)
-    if x == -1:
-        y = -1
-    elif y == -1:
-        x = -1
+    if x == -1 or y == -1:
+        y = -1        x = -1
     return x,y
 
 def check_mouse_YN(mouse_pos):
@@ -145,12 +143,6 @@ def game_draw():
     pygame.draw.line(surface, white, (x0, y2), (x3, y2), width= 5)
     pygame.draw.line(surface, white, (x2, y0), (x2, y3), width= 5)
 
-def winning_text(who_won):
-    winner_font = pygame.font.Font(".\PixeloidSans-JR6qo.ttf", round(window_size*0.05))
-    winner = winner_font.render('Player ' + who_won + ' wins!', True, red)
-    pygame.draw.rect(surface, black, pygame.Rect(round(window_size*.1), round(window_size*.43), round(window_size*.8), round(window_size*.15)))
-    surface.blit(winner, (round(window_size*.32), round(window_size*.47)))
-
 def play_again(hover):
     if hover == True:
         colourY = red
@@ -188,8 +180,6 @@ def game_text(player_O_score_int, player_X_score_int):
     surface.blit(player_X_score, (window_size-window_size*0.17, window_size*0.0875))
 
 def x_o_draw(game_state):
-    font_size_xo = round(window_size*0.16)
-    font_xo =  pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_xo)
     for y_index, row in enumerate(game_state):
         for x_index, item in enumerate(row):
             if not item == '_':
@@ -200,8 +190,6 @@ def x_o_draw(game_state):
                 surface.blit(xo, xy)
 
 def x_o_hover(mouse_pos, x_or_o):
-    font_size_xo = round(window_size*0.16)
-    font_xo =  pygame.font.Font(".\PixeloidSans-JR6qo.ttf", font_size_xo)
     xo = font_xo.render(x_or_o, True, hover_grey)
     if not mouse_pos is None:
         mouse_pos = list(mouse_pos)
@@ -224,7 +212,6 @@ def game_loop():
         x_o_draw(game_state)
         if check_for_winner():
             winner = x_or_o(player)
-            winning_text(winner)
             play_again(check_mouse_YN(mouse_pos))
         pygame.display.flip()
         for event in pygame.event.get():
