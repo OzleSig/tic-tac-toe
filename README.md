@@ -11,4 +11,5 @@ This is my repo for a pygame enhanced tic tac toe game. I have already made a ti
 * Winning row/column/diagonal indicated in red
 
 ## Planned changes
+* Fix diagonal win indicator
 * Refactor the code
